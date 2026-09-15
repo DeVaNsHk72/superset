@@ -3698,6 +3698,10 @@
             "description": "The status of the async screenshot",
             "type": "string"
           },
+          "task_timeout_seconds": {
+            "description": "The client wait budget for the Pending and Computing task states",
+            "type": "integer"
+          },
           "task_updated_at": {
             "description": "The timestamp of the last change in status",
             "type": "string"
@@ -19357,6 +19361,16 @@
           }
         },
         "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardCacheScreenshotResponseSchema"
+                }
+              }
+            },
+            "description": "Existing dashboard screenshot task status"
+          },
           "202": {
             "content": {
               "application/json": {
@@ -19378,6 +19392,9 @@
           },
           "500": {
             "$ref": "#/components/responses/500"
+          },
+          "503": {
+            "description": "Screenshot cache unavailable"
           }
         },
         "security": [
