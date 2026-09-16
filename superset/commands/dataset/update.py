@@ -44,7 +44,7 @@ from superset.commands.dataset.exceptions import (
     DatasetUpdateFailedError,
     MultiCatalogDisabledValidationError,
 )
-from superset.commands.utils import compute_subjects
+from superset.commands.utils import compute_subjects, raise_if_managed_externally
 from superset.connectors.sqla.models import SqlaTable, validate_stored_expression
 from superset.connectors.sqla.partition_mapping import (
     parse_skeleton,
@@ -113,6 +113,8 @@ class UpdateDatasetCommand(UpdateMixin, BaseCommand):
             security_manager.raise_for_editorship(self._model)
         except SupersetSecurityException as ex:
             raise DatasetForbiddenError() from ex
+
+        raise_if_managed_externally(self._model, DatasetForbiddenError)
 
         # Validate/Populate editors
         compute_subjects(self._model, self._properties, exceptions)
